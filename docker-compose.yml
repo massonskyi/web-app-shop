@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+
+  web:
+    build: .
+    container_name: fastapi_app
+    command: >
+          /bin/sh -c "
+            while ! nc -z db 5432; do
+              echo waiting for database;
+              sleep 2;
+            done;
+            echo Database is up;
+            exec uvicorn backend.core.main:app --host 0.0.0.0 --port 8000
+          "
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT}
+      DB_USER: ${DB_USER}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_PASS: ${DB_PASS}
+      DATABASE_URL: ${DATABASE_URL}
+    networks:
+      - app-network
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

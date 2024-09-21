@@ -1,0 +1,5 @@
+/.venv
+/.vscode
+/logs
+# Игнорировать все директории __pycache__
+**/__pycache__/
