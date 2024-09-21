@@ -1,3 +1,4 @@
+import shutil
 from typing import (
     List, 
     Optional
@@ -5,8 +6,10 @@ from typing import (
 import json
 from fastapi import (
     APIRouter, 
-    Depends, 
-    HTTPException, 
+    Depends,
+    File, 
+    HTTPException,
+    UploadFile, 
     status, 
     Response
 )
@@ -22,7 +25,7 @@ API_PRODUCT_MODULE = APIRouter(
     prefix="/product",
     tags=['Product module API']
 )
-
+DEFAULT_IMAGE_PATH: Optional[str] = f"../../../../frontend/build/static/uploads/default.png"
 CreateProductResponse = CreateProductSchema
 
 async def get_product_manager(
@@ -49,6 +52,7 @@ async def get_product_manager(
 async def create_product(
     product: CreateProductResponse,
     product_manager: 'ProductManager' = Depends(get_product_manager),
+    file: UploadFile = File(...),
     current_user: Admin = Depends(get_current_user)
 ) -> Response:
     """
@@ -56,6 +60,17 @@ async def create_product(
     """
     response_content = {}
     status_code: status
+    if file:
+        file_name = f"file_{product.name}_{file.filename}"
+        file_path = f"../../../../frontend/build/static/uploads/{file_name}"
+        
+        # save
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+            
+        product.image = file_path
+    else:
+        product.image = DEFAULT_IMAGE_PATH
     
     try:
         new_product = await product_manager.create_new_product(product)
