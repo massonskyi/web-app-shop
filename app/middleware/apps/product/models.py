@@ -57,7 +57,7 @@ class Product(Base):
     is_on_sale: Optional[bool] = Column(Boolean, nullable=True)  # New field for sale status
     sale_price: Optional[float] = Column(Float, nullable=True)   # New field for sale price
 
-    def __init__(self, name, smallDescription, description, application, structure, price, image, type, status):
+    def __init__(self, name, smallDescription, description, application, structure, price, type, status, is_on_sale, sale_price):
         """
         Initialize product
         """
@@ -67,10 +67,10 @@ class Product(Base):
         self.application = application
         self.structure = structure
         self.price = price
-        self.image = image
         self.type = type
         self.status = status
-    
+        self.is_on_sale = is_on_sale
+        self.sale_price = sale_price
         # Создание папки и файлов при создании записи
         self.create_product_files()
         

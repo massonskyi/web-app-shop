@@ -8,11 +8,13 @@ from fastapi import (
     APIRouter, 
     Depends,
     File, 
+    Form,
     HTTPException,
     UploadFile, 
-    status, 
+    status as HTTPStatus, 
     Response
 )
+from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from middleware.apps.admin.models import Admin
@@ -25,7 +27,7 @@ API_PRODUCT_MODULE = APIRouter(
     prefix="/product",
     tags=['Product module API']
 )
-DEFAULT_IMAGE_PATH: Optional[str] = f"../../../../frontend/build/static/uploads/default.png"
+DEFAULT_IMAGE_PATH: Optional[str] = f"../../../../../frontend/build/static/uploads/default.png"
 CreateProductResponse = CreateProductSchema
 
 async def get_product_manager(
@@ -47,35 +49,57 @@ async def get_product_manager(
 @API_PRODUCT_MODULE.post(
     '/',
     response_model=CreateProductResponse,
-    summary= 'Create product',
+    summary='Create product',
 )
 async def create_product(
-    product: CreateProductResponse,
+    name: str = Form(...),
+    smallDescription: str = Form(...),
+    description: str = Form(...),
+    application: str = Form(...),
+    structure: str = Form(...),
+    price: float = Form(...),
+    type: str = Form(...),
+    status: bool = Form(...),
+    is_on_sale: bool = Form(...),
+    sale_price: float = Form(...),
     product_manager: 'ProductManager' = Depends(get_product_manager),
     file: UploadFile = File(...),
     current_user: Admin = Depends(get_current_user)
 ) -> Response:
     """
-    Create product. API endpoint. 
+    Create product. API endpoint.
     """
+    product = CreateProductSchema(
+        name=name,
+        smallDescription=smallDescription,
+        description=description,
+        application=application,
+        structure=structure,
+        price=price,
+        type=type,
+        status=status,
+        is_on_sale=is_on_sale,
+        sale_price=sale_price
+    )
+
     response_content = {}
-    status_code: status
+    status_code: HTTPStatus
     if file:
         file_name = f"file_{product.name}_{file.filename}"
-        file_path = f"../../../../frontend/build/static/uploads/{file_name}"
-        
+        file_path = f"D:\\study\\уник\\web\\web-app-shop\\frontend\\build\\static\\uploads\\{file_name}"
+
         # save
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
-            
-        product.image = file_path
+
+        result_image_path = file_path
     else:
-        product.image = DEFAULT_IMAGE_PATH
-    
+        result_image_path = DEFAULT_IMAGE_PATH
+
     try:
-        new_product = await product_manager.create_new_product(product)
+        new_product = await product_manager.create_new_product(product, image=result_image_path)
     except Exception as e:
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR
         raise HTTPException(
             status_code=status_code,
             detail=str(e)
@@ -83,14 +107,13 @@ async def create_product(
     else:
         response_content['product'] = new_product.dict()
         response_content['detail'] = "Successfully created product "
-        status_code = status.HTTP_201_CREATED  # 201 Created    
+        status_code = HTTPStatus.HTTP_201_CREATED  # 201 Created
     finally:
-
         if not response_content.get('product', None):
             response_content['product'] = None
             response_content['detail'] = "Failed to create product"
-            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR # 500 Internal Server Error
-            
+            status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR # 500 Internal Server Error
+
     response_json = json.dumps(response_content)  # Convert dictionary to JSON string
     response = Response(content=response_json, media_type="application/json", status_code=status_code)
     return response

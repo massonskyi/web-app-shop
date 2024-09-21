@@ -23,7 +23,7 @@ class ProductManager:
         """
         self.__async_db_session = database_session
 
-    async def create_new_product(self, new: CreateProductSchema) -> Optional[CreateProductSchema]:
+    async def create_new_product(self, new: CreateProductSchema, image: Optional[str] = None) -> Optional[CreateProductSchema]:
         """
         Create a new product.
         @params: new: The new product.
@@ -35,16 +35,19 @@ class ProductManager:
             raise ValueError(f"Validation error: {new.errors()}")
 
         new_product = Product(**new.dict())
-
+        new_product.image = image
         try:
             async with self.__async_db_session as async_session:
-                async with async_session.begin():
+                if not async_session.in_transaction():
+                    async with async_session.begin():
+                        async_session.add(new_product)
+                        await async_session.commit()
+                else:
                     async_session.add(new_product)
                     await async_session.commit()
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
             raise SQLAlchemyError(f"Error: {e}")
-
         return CreateProductSchema(**new_product.dict())
 
     async def get_product_by_id(self, product_id: int) -> Optional[CreateProductSchema]:

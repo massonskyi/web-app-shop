@@ -1,3 +1,4 @@
+from fastapi import Form
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional
 
@@ -6,17 +7,16 @@ class CreateProductSchema(BaseModel):
     Create product schema model class for pydantic validation and serialization
     """
 
-    name: Optional[str] = Field(None, description="Name of the product", min_length=1, max_length=255)
-    smallDescription: Optional[str] = Field(None, description="Small description of the product", min_length=1, max_length=255)
-    description: Optional[str] = Field(None, description="Description of the product", min_length=1, max_length=999)
-    application: Optional[str] = Field(None, description="Application of the product", min_length=1, max_length=255)
-    structure: Optional[str] = Field(None, description="Structure of the product", min_length=1, max_length=255)
-    price: Optional[float] = Field(None, description="Price of the product")
-    image: Optional[str] = Field(None, description="Image of the product")
-    type: Optional[str] = Field(None, description="Type of the product", min_length=1, max_length=255)
-    status: Optional[bool] = Field(None, description="Status of the product")
-    is_on_sale: Optional[bool] = Field(None, description="Is the product on sale")
-    sale_price: Optional[float] = Field(None, description="Sale price of the product")
+    name: Optional[str] = Form(None, description="Name of the product", min_length=1, max_length=255)
+    smallDescription: Optional[str]
+    description: Optional[str]
+    application: Optional[str]
+    structure: Optional[str]
+    price: Optional[float] = Form(..., description="Price of the product")
+    type: Optional[str]
+    status: Optional[bool]
+    is_on_sale: Optional[bool]
+    sale_price: Optional[float]
 
     def __repr__(self):
         return '<Product %r>' % self.name

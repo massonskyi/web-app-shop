@@ -1,0 +1,10 @@
+Product ID: None
+Product Name: string
+Small Description: string
+Description: string
+Application: string
+Structure: string
+Price: 0.0
+Image: None
+Type: string
+Status: True
