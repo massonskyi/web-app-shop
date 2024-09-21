@@ -7,7 +7,7 @@ from fastapi import(
      APIRouter,
      Depends,
      HTTPException, 
-     Response
+     Response,
 )
 
 from fastapi.security import OAuth2PasswordRequestForm
@@ -88,7 +88,7 @@ async def sign_in(
     summary="Create a new admin"
 )
 async def create_admin(
-    admin: AdminCreateResponse, 
+    admin: AdminCreateResponse,
     db: AsyncSession = Depends(get_async_db), 
 )->None:
     """

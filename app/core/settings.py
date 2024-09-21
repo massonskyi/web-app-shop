@@ -118,7 +118,6 @@ class Settings(BaseSettings):
     db_name: str
     db_pass: int
     database_url: str
-
     class Config:
         """
         Config class for Settings application.
