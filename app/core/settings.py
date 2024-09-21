@@ -110,14 +110,15 @@ class Settings(BaseSettings):
     backend_secret_cookie_key: str
     postgres_db: str
     postgres_user: str
-    postgres_password: str
+    postgres_password: int
     environment: str
     db_user: str
     db_host: str
     db_port: str
     db_name: str
-    db_pass: str
+    db_pass: int
     database_url: str
+
     class Config:
         """
         Config class for Settings application.

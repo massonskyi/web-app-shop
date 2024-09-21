@@ -93,7 +93,7 @@ async def create_admin(
 )->None:
     """
     Create a new admin.
-
+pass321S#
     Args:
         admin (AdminCreateSchema): The admin data to create.
         db (AsyncSession): The database session.

@@ -71,7 +71,7 @@ class AsyncLogger:
         Initialize the logger. 
         """
         edx('../logs')
-        self.file_handler = logging.FileHandler(f'../logs/{name}_{random.randint(0, 99)}_{datetime.datetime.now()}.log')
+        self.file_handler = logging.FileHandler(f'..\\logs\\{name}_{random.randint(0, 99)}.log')
         self.setup(name)
             
     def setup(self, name: Union[str, None] = None):
