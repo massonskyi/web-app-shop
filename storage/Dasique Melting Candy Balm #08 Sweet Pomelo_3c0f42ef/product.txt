@@ -1,0 +1,13 @@
+Product ID: None
+Product Name: Dasique Melting Candy Balm #08 Sweet Pomelo
+Small Description: Тающий оттеночный бальзам
+Description: Тающий оттеночный бальзам с питательными маслами и фруктовыми экстрактами придаёт губам сочный глянцевый блеск и сияние, смягчает и увлажняет кожу губ, а также создаёт мягкий, но сочный цвет, который подойдёт для любого макияжа.
+
+Объём: 1,5 гр.
+
+Application: Нанести необходимое количество средства на кожу губ, обновлять по мере необходимости в течение дня.
+Structure: Hydrogenated Polyisobutene,Dipentaerythrityl Tetrahydroxystearate/Tetraisostearate, Ethylhexyl Hydroxystearate,
+Price: 1087.0
+Image: None
+Type: Косметика
+Status: False

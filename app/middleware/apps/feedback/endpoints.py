@@ -37,7 +37,7 @@ async def get_feedback_manager(
     summary='Create feedback',
 )
 async def create_feedback(
-    feedback: CreateFeedBackResponse,
+    feedback: CreateFeedBackResponse = Depends(),
     feedback_manager: 'FeedBackManager' = Depends(get_feedback_manager),
 ) -> Response:
     """
@@ -155,7 +155,7 @@ async def get_all_feedbacks(
 )
 async def update_feedback_by_id(
     feedback_id: int,
-    feedback: UpdateFeedBackSchema,
+    feedback: UpdateFeedBackSchema = Depends(),
     feedback_manager: 'FeedBackManager' = Depends(get_feedback_manager),
     current_user: Admin = Depends(get_current_user)
 ) -> Response:

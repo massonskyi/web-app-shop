@@ -4,6 +4,7 @@ from typing import (
     Optional
 )
 import json
+from typing_extensions import deprecated
 from fastapi import (
     APIRouter, 
     Depends,
@@ -52,52 +53,31 @@ async def get_product_manager(
     summary='Create product',
 )
 async def create_product(
-    name: str = Form(...),
-    smallDescription: str = Form(...),
-    description: str = Form(...),
-    application: str = Form(...),
-    structure: str = Form(...),
-    price: float = Form(...),
-    type: str = Form(...),
-    status: bool = Form(...),
-    is_on_sale: bool = Form(...),
-    sale_price: float = Form(...),
+    new: CreateProductResponse= Depends(),
     product_manager: 'ProductManager' = Depends(get_product_manager),
-    file: UploadFile = File(...),
     current_user: Admin = Depends(get_current_user)
 ) -> Response:
     """
     Create product. API endpoint.
     """
-    product = CreateProductSchema(
-        name=name,
-        smallDescription=smallDescription,
-        description=description,
-        application=application,
-        structure=structure,
-        price=price,
-        type=type,
-        status=status,
-        is_on_sale=is_on_sale,
-        sale_price=sale_price
-    )
 
     response_content = {}
     status_code: HTTPStatus
-    if file:
-        file_name = f"file_{product.name}_{file.filename}"
+    if new.file:
+        file_name = f"file_{new.name}_{new.file.filename}"
         file_path = f"D:\\study\\уник\\web\\web-app-shop\\frontend\\build\\static\\uploads\\{file_name}"
 
         # save
         with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
+            shutil.copyfileobj(new.file.file, buffer)
 
         result_image_path = file_path
     else:
         result_image_path = DEFAULT_IMAGE_PATH
 
     try:
-        new_product = await product_manager.create_new_product(product, image=result_image_path)
+
+        new_product = await product_manager.create_new_product(new, image=result_image_path)
     except Exception as e:
         status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR
         raise HTTPException(
@@ -105,7 +85,8 @@ async def create_product(
             detail=str(e)
         )
     else:
-        response_content['product'] = new_product.dict()
+        response_content['product'] = new_product.dict(exclude={"file"})  # Исключаем объект файла
+        response_content['file_path'] = result_image_path
         response_content['detail'] = "Successfully created product "
         status_code = HTTPStatus.HTTP_201_CREATED  # 201 Created
     finally:
@@ -135,25 +116,26 @@ async def get_product_by_id(
     @raise: HTTPException if product not found.
     """
     response_content = {}
-    status_code: status
+    status_code: HTTPStatus
     try:
-        product = await product_manager.get_product_by_id(product_id)
+        product, file = await product_manager.get_product_by_id(product_id)
     except Exception as e:
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR
         raise HTTPException(
             status_code=status_code,
             detail=str(e)
         )
     else:
-        response_content['product'] = product.dict()
+        response_content['product'] = product  # Исключаем объект файла
+        response_content['file'] = file
         response_content['details'] = "Successfully get product"
-        status_code = status.HTTP_202_ACCEPTED  # 202 Accepted   
+        status_code = HTTPStatus.HTTP_202_ACCEPTED  # 202 Accepted   
     finally:
         
         if not response_content.get('product', None):
             response_content['product'] = None
             response_content['details'] = "Failed to get product"
-            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR # 500 Internal Server Error
+            status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR # 500 Internal Server Error
             
         response_json = json.dumps(response_content)  # Convert dictionary to JSON string
         response = Response(content=response_json, media_type="application/json", status_code=status_code)
@@ -175,25 +157,25 @@ async def get_all_products(
     @raise: HTTPException if products not found.
     """
     response_content = {}
-    status_code: status
+    status_code: HTTPStatus
     try:
         products = await product_manager.get_all_products()
     except Exception as e:
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR
         raise HTTPException(
             status_code=status_code,
             detail=str(e)
         )
     else:
-        response_content['products'] = [product.dict() for product in products]
+        response_content['products'] = {"all_products":products} 
         response_content['details'] = "Successfully get all products"
-        status_code = status.HTTP_202_ACCEPTED  # 202 Accepted   
+        status_code = HTTPStatus.HTTP_202_ACCEPTED  # 202 Accepted   
     finally:
         
         if not response_content.get('products', None):
             response_content['products'] = None
             response_content['details'] = "Failed to get all products"
-            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR # 500 Internal Server Error
+            status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR # 500 Internal Server Error
         
     response_json = json.dumps(response_content)  # Convert dictionary to JSON string
     response = Response(content=response_json, media_type="application/json", status_code=status_code)
@@ -215,28 +197,25 @@ async def get_all_products(
     @raise: HTTPException if products not found.
     """
     response_content = {}
-    status_code: status
+    status_code: HTTPStatus
     try:
-        products = await product_manager.get_products_by_type(product_type=product_type)
+        products = await product_manager.get_products_by_type(product_type)
     except Exception as e:
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR
         raise HTTPException(
             status_code=status_code,
             detail=str(e)
         )
     else:
-        if not products:  # If product not found
-            pass
-        
-        response_content['products'] = [product.dict() for product in products]
+        response_content['products'] = {"all_products":products} 
         response_content['details'] = "Successfully get all products"
-        status_code = status.HTTP_202_ACCEPTED  # 202 Accepted   
+        status_code = HTTPStatus.HTTP_202_ACCEPTED  # 202 Accepted   
     finally:
         
         if not response_content.get('products', None):
             response_content['products'] = None
             response_content['details'] = "Failed to get all products"
-            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR # 500 Internal Server Error
+            status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR # 500 Internal Server Error
         
     response_json = json.dumps(response_content)  # Convert dictionary to JSON string
     response = Response(content=response_json, media_type="application/json", status_code=status_code)
@@ -249,7 +228,7 @@ async def get_all_products(
 )
 async def update_product_by_id(
     product_id: int,
-    product: CreateProductResponse,
+    product: CreateProductResponse = Depends(),
     product_manager: 'ProductManager' = Depends(get_product_manager),
     current_user: Admin = Depends(get_current_user)
 ) -> Response:
@@ -262,25 +241,26 @@ async def update_product_by_id(
     @raise: HTTPException if product not found.
     """
     response_content = {}
-    status_code: status
+    status_code: HTTPStatus
     try:
-        updated_product = await product_manager.update_product_by_id(product_id, product)
+        updated_product, file = await product_manager.update_product_by_id(product_id, product)
     except Exception as e:
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR
         raise HTTPException(
             status_code=status_code,
             detail=str(e)
         )
     else:
-        response_content['product'] = updated_product.dict()
+        response_content['product'] = updated_product
+        response_content['file'] = file
         response_content['details'] = "Successfully updated product"
-        status_code = status.HTTP_202_ACCEPTED  # 202 Accepted   
+        status_code = HTTPStatus.HTTP_202_ACCEPTED  # 202 Accepted   
     finally:
         
         if not response_content.get('product', None):
             response_content['product'] = None
             response_content['details'] = "Failed to update product"
-            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR # 500 Internal Server Error
+            status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR # 500 Internal Server Error
             
         response_json = json.dumps(response_content)  # Convert dictionary to JSON string
         response = Response(content=response_json, media_type="application/json", status_code=status_code)
@@ -305,25 +285,25 @@ async def delete_product_by_id(
     @raise: HTTPException if product not found.
     """
     response_content = {}
-    status_code: status
+    status_code: HTTPStatus
     try:
-        deleted_product = await product_manager.delete_product_by_id(product_id)
+        deleted_product = await product_manager.delete_product(product_id)
     except Exception as e:
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR
         raise HTTPException(
             status_code=status_code,
             detail=str(e)
         )
     else:
-        response_content['product'] = deleted_product.dict()
+        response_content['product'] = deleted_product
         response_content['details'] = "Successfully deleted product"
-        status_code = status.HTTP_202_ACCEPTED  # 202 Accepted   
+        status_code = HTTPStatus.HTTP_202_ACCEPTED  # 202 Accepted   
     finally:
         
         if not response_content.get('product', None):
             response_content['product'] = None
             response_content['details'] = "Failed to delete product"
-            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR # 500 Internal Server Error
+            status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR # 500 Internal Server Error
             
         response_json = json.dumps(response_content)  # Convert dictionary to JSON string
         response = Response(content=response_json, media_type="application/json", status_code=status_code)
@@ -346,29 +326,32 @@ async def get_products_on_sale(
     @raise: HTTPException if products not found.
     """
     response_content = {}
-    status_code: status
+    status_code: HTTPStatus
     try:
         products = await product_manager.get_products_on_sale()
     except Exception as e:
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR
         raise HTTPException(
             status_code=status_code,
             detail=str(e)
         )
     else:
-        response_content['products'] = [product.dict() for product in products]
+        response_content['products'] = {"all_products":products} 
         response_content['details'] = "Successfully get all products on sale"
-        status_code = status.HTTP_202_ACCEPTED  # 202 Accepted
+        status_code = HTTPStatus.HTTP_202_ACCEPTED  # 202 Accepted
     finally:
         if not response_content.get('products', None):
             response_content['products'] = None
             response_content['details'] = "Failed to get all products on sale"
-            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR # 500 Internal Server Error
+            status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR # 500 Internal Server Error
 
     response_json = json.dumps(response_content)  # Convert dictionary to JSON string
     response = Response(content=response_json, media_type="application/json", status_code=status_code)
     return response
 
+
+
+@deprecated("Will be delite on version api 2")
 @API_PRODUCT_MODULE.get(
     '/with-sale-price/',
     response_model=List[CreateProductResponse],
@@ -384,11 +367,11 @@ async def get_products_with_sale_price(
     @raise: HTTPException if products not found.
     """
     response_content = {}
-    status_code: status
+    status_code: HTTPStatus
     try:
         products = await product_manager.get_products_with_sale_price()
     except Exception as e:
-        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR
         raise HTTPException(
             status_code=status_code,
             detail=str(e)
@@ -396,12 +379,12 @@ async def get_products_with_sale_price(
     else:
         response_content['products'] = [product.dict() for product in products]
         response_content['details'] = "Successfully get all products with sale price"
-        status_code = status.HTTP_202_ACCEPTED  # 202 Accepted
+        status_code = HTTPStatus.HTTP_202_ACCEPTED  # 202 Accepted
     finally:
         if not response_content.get('products', None):
             response_content['products'] = None
             response_content['details'] = "Failed to get all products with sale price"
-            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR # 500 Internal Server Error
+            status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR # 500 Internal Server Error
 
     response_json = json.dumps(response_content)  # Convert dictionary to JSON string
     response = Response(content=response_json, media_type="application/json", status_code=status_code)

@@ -1,0 +1,10 @@
+Product ID: None
+Product Name: BRAYE Lipsleek 05 Ease
+Small Description: Многофункциональный оттеночный бальзам-слайдер для губ
+Description: Многофункциональный оттеночный бальзам-слайдер для губ всегда будет с вами в течение дня и поможет создать натуральный и дерзкий образ.
+Application: Нанесите необходимое количество средства на кожу губ с помощью кисти, пальца или силиконового спонжа. Можно использовать в качестве румян.
+Structure: Polybutene, Polyglyceryl-2 Isostearate/Dimer Dilinoleate Copolymer, Apple (Apple) Seed Oil, Diisostearyl Malate, Caprylic/Capric Triglyceride, Microcrystalline Wax, Titanium Dioxide (CI 77891), Candelilla Wax, Polyglyceryl-10 Decaisostearate, Polyglyceryl-2 Triisostearate, Hydrolyzed Hyaluronic Acid, Hydrogenated Coco-Glycerides, Synthetic Fluorphlogopite, VP/Hexadecene Copolymer, Polyethylene, Polyglyceryl-2 Diisostearate, Adenosine, Stearalkonium Hectorite, Caprylyl Glycol, Glyceryl Caprylate, Propylene Carbonate, Betaine, Panthenol, Purified Water, 1,2-Hexanediol, Hexapeptide-2, Biotin, Yellow 4 Lake (CI 19140), Red Iron Oxide (CI 77491), Red 202 Lake (CI 15850), Red 227 Lake (CI 17200)
+Price: 2090.0
+Image: None
+Type: Косметика
+Status: False

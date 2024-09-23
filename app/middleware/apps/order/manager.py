@@ -33,15 +33,12 @@ class OrderManager:
         @return: CreateOrderSchema object.
         @raise: Exception if database session is not initialized.
         """
-        if not new.validate():
-            await self.log.b_crit(f"Validation failed: {new.errors}")
-            raise ValueError(f"Validation failed: {new.errors}")
         new_order = Order(**new.dict())
         try:
-            async with self.__async_db_session.begin():
-                self.__async_db_session.add(new_order)
-                await self.__async_db_session.commit()
-                await self.__async_db_session.refresh(new_order)
+            async with self.__async_db_session as async_session:
+                async with async_session.begin():
+                    async_session.add(new_order)
+                    await async_session.commit()
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Failed to create order: {e}")
             raise SQLAlchemyError(f"Failed to create order: {e}")

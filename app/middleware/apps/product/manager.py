@@ -1,10 +1,24 @@
+import base64
 from typing import List, Optional
+from typing_extensions import deprecated
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 from middleware.apps.product.models import Product
 from functions.async_logger import AsyncLogger
 from .schemas import CreateProductSchema, UpdateProductSchema
+
+def load_image(image):
+    # take from https://github.com/massonskyi/OWC-backend/blob/master/middleware/profile/endpoints.py
+    try:
+        with open(image, "rb") as buffer:
+            image_data = buffer.read()
+        return base64.b64encode(image_data).decode('utf-8')
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Avatar not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while retrieving the avatar: {e}")
 
 class ProductManager:
     """
@@ -34,8 +48,19 @@ class ProductManager:
             await self.log.b_crit(f"Validation error: {new.errors()}")
             raise ValueError(f"Validation error: {new.errors()}")
 
-        new_product = Product(**new.dict())
-        new_product.image = image
+        new_product = Product(
+            name=new.name,
+            smallDescription=new.smallDescription,
+            description=new.description,
+            application=new.application,
+            structure=new.structure,
+            price=new.price,
+            status=new.status,
+            type=new.type,
+            is_on_sale=new.is_on_sale,
+            sale_price=new.sale_price,
+            file=image
+            )
         try:
             async with self.__async_db_session as async_session:
                 if not async_session.in_transaction():
@@ -62,7 +87,7 @@ class ProductManager:
                 result = await async_session.execute(select(Product).filter_by(id=product_id))
                 product = result.scalar_one_or_none()
                 if product:
-                    return CreateProductSchema(**product.dict())
+                    return CreateProductSchema(**product.dict()).dict(exclude={"file"}), load_image(product.image)
                 return None
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
@@ -78,7 +103,9 @@ class ProductManager:
             async with self.__async_db_session as async_session:
                 result = await async_session.execute(select(Product))
                 products = result.scalars().all()
-                return [CreateProductSchema(**product.dict()) for product in products]
+                if not products:
+                    raise
+            return  [{'id':product.id, 'product':CreateProductSchema(**product.dict()).dict(exclude={"file"}), 'file':load_image(product.image)} for product in products]
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
             raise SQLAlchemyError(f"Error: {e}")
@@ -94,7 +121,7 @@ class ProductManager:
             async with self.__async_db_session as async_session:
                 result = await async_session.execute(select(Product).filter_by(type=product_type))
                 products = result.scalars().all()
-                return [CreateProductSchema(**product.dict()) for product in products]
+                return  [{'id':product.id, 'product':CreateProductSchema(**product.dict()).dict(exclude={"file"}), 'file':load_image(product.image)} for product in products]
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
             raise SQLAlchemyError(f"Error: {e}")
@@ -109,11 +136,12 @@ class ProductManager:
             async with self.__async_db_session as async_session:
                 result = await async_session.execute(select(Product).filter_by(is_on_sale=True))
                 products = result.scalars().all()
-                return [CreateProductSchema(**product.dict()) for product in products]
+                return  [{'id':product.id, 'product':CreateProductSchema(**product.dict()).dict(exclude={"file"}), 'file':load_image(product.image)} for product in products]
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
             raise SQLAlchemyError(f"Error: {e}")
-
+        
+    @deprecated("Will be delite on version api 2")
     async def get_products_with_sale_price(self) -> List[Optional[CreateProductSchema]]:
         """
         Get all products and display the sale price if the product is on sale.
@@ -151,7 +179,8 @@ class ProductManager:
                     for key, value in update.dict(exclude_unset=True).items():
                         setattr(product, key, value)
                     await async_session.commit()
-                    return CreateProductSchema(**product.dict())
+
+                    return CreateProductSchema(**product.dict()).dict(exclude={"file"}), load_image(product.image)
                 return None
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
@@ -166,14 +195,13 @@ class ProductManager:
         """
         try:
             async with self.__async_db_session as async_session:
-                async with async_session.begin():
-                    result = await async_session.execute(select(Product).filter_by(id=product_id))
-                    product = result.scalar_one_or_none()
-                    if product:
-                        await async_session.delete(product)
-                        await async_session.commit()
-                        return True
-                    return False
+                result = await async_session.execute(select(Product).filter_by(id=product_id))
+                product = result.scalar_one_or_none()
+                if product:
+                    await async_session.delete(product)
+                    await async_session.commit()
+                    return True
+                return False
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
             raise SQLAlchemyError(f"Error: {e}")

@@ -73,3 +73,13 @@ class Order(Base):
             raise ValueError('Delivery price must be greater than 5,000')
         
         return value
+    def __iter__(self):
+        for attr, value in self.__dict__.items():
+            if not attr.startswith('_'):
+                yield attr, value
+                
+    def dict(self):
+        data = {}
+        for attr, value in self:
+                data[attr] = value
+        return data

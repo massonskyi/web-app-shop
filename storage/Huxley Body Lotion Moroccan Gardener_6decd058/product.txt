@@ -1,0 +1,12 @@
+Product ID: None
+Product Name: Huxley Body Lotion Moroccan Gardener
+Small Description: Парфюмированный лосьон для тела с ароматом марокканского сада
+Description: Парфюмированный лосьон для тела с ароматом морокканского сада обеспечивает глубокое увлажнение и питание, а также придаёт коже приятный аромат.
+
+Объём: 300 мл.
+Application: Нанести необходимое количество средства и равномерно распределить на чистую кожу тела до полного впитывания.
+Structure: Aqua/water/eau, Glycerinbutylene Glycol , Caprylic/capric Triglyceride, Polyglyceryl3 Methylglucose
+Price: 3290.0
+Image: None
+Type: Тело
+Status: False

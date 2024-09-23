@@ -22,7 +22,8 @@ feedback_table = Table(
     Column('id', Integer, primary_key=True, autoincrement=True, nullable=False, unique=True),    
     Column('fullname', String(255), nullable=False),
     Column('email', String(50), nullable=False, unique=True),
-    Column('description', String(999), nullable=False)
+    Column('description', String(999), nullable=False),
+    Column('phone', String(255), nullable=False)
 )
 
 
@@ -35,8 +36,9 @@ class FeedBack(Base):
     fullname: Optional[str] = Column(String(255), nullable=False)
     email: Optional[str] = Column(String(50), nullable=False, unique=True)
     description: Optional[str] = Column(String(999), nullable=False)
-    
-    def __init__(self, fullname, email, description) -> None:
+    phone: Optional[str] = Column(String(255), nullable=False)
+
+    def __init__(self, fullname, email, description, phone) -> None:
         """
         Initialize FeedBack class model
         @param fullname: Full name
@@ -49,6 +51,7 @@ class FeedBack(Base):
         self.fullname = fullname
         self.email = email
         self.description = description
+        self.phone = phone
     
     @validates('fullname')
     def validate_fullname(self, key, value):

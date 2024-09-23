@@ -38,6 +38,7 @@ allow_origins = [
     "http://localhost:8080",
     "http://localhost:3000",
     "http://10.78.1.48:3000",
+    "http://127.0.0.1:8000/"
 ]
 
 allow_credentials = True
@@ -106,11 +107,11 @@ async def custom_http_exception_handler(request: Request, exc: HTTPException):
         content={"message": exc.detail},
     )
   
-@app.get("/{full_path:path}")
-async def catch_all(full_path: str):
-    # Возвращаем index.html для любых запросов, которые не соответствуют API
-    with open(INDEX_DIRECTORY, 'r') as file:
-        return HTMLResponse(content=file.read(), status_code=200)
+# @app.get("/{full_path:path}")
+# async def catch_all(full_path: str):
+#     # Возвращаем index.html для любых запросов, которые не соответствуют API
+#     with open(INDEX_DIRECTORY, 'r') as file:
+#         return HTMLResponse(content=file.read(), status_code=200)
     
 
 def create_parser() -> argparse.ArgumentParser:

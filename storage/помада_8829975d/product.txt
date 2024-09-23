@@ -1,0 +1,10 @@
+Product ID: None
+Product Name: помада
+Small Description: красивая
+Description: очень красивая
+Application: на губы
+Structure: много полезных
+Price: 1000.0
+Image: None
+Type: Косметика
+Status: True

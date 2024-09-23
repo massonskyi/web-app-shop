@@ -1,0 +1,14 @@
+Product ID: None
+Product Name: Dr.Althea Refresh Moment Perfume Treatment 01 Jeju Camellia
+Small Description: Парфюмированная маска-кондиционер для волос
+Description: Парфюмированная маска-кондиционер для волос направлена на питание и восстановление волос.
+
+Объём: 150 мл.
+
+Подходит для: Всех типов волос.
+Application: Равномерно распределить необходимое количество по длине чистых влажных волос, избегая прикорневой зоны, оставить для воздействия на 5-10 минут, затем смыть тёплой водой.
+Structure: Water,glycerin,cetyl alcohol,dimethicone,butylene glycol,behentrimonium chloride,stearyl alcohol,stearamidopropyl dimethylamine,fragrance
+Price: 2190.0
+Image: None
+Type: Волосы
+Status: False

@@ -1,0 +1,10 @@
+Product ID: None
+Product Name: sdadasd
+Small Description: sadadasdas
+Description: dsaasd
+Application: asdasdasd
+Structure: adasdasda
+Price: 23123.0
+Image: None
+Type: dsdasddas
+Status: True

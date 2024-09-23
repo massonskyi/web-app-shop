@@ -36,7 +36,7 @@ async def get_order_manager(
     summary='Create order',
 )
 async def create_order(
-    order: CreateOrderResponse,
+    order: CreateOrderResponse = Depends(),
     order_manager: 'OrderManager' = Depends(get_order_manager),
 ) -> Response:
     """
@@ -154,7 +154,7 @@ async def get_all_orders(
 )
 async def update_order_by_id(
     order_id: int,
-    order: UpdateOrderSchema,
+    order: UpdateOrderSchema = Depends(),
     order_manager: 'OrderManager' = Depends(get_order_manager),
     current_user: Admin = Depends(get_current_user)
 ) -> Response:

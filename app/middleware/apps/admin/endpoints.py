@@ -63,7 +63,7 @@ async def sign_in(
         "message": "Sign in admin successfully",
         "access_token": token,
         "token_type": "bearer",
-        "token_expires_at": expire.isoformat()  # Convert datetime to ISO format string
+        "token_expires_at": expire.timestamp()  # Convert datetime to ISO format string
     }
     response_json = json.dumps(response_content)  # Convert dictionary to JSON string
     response = Response(content=response_json, media_type="application/json")
@@ -74,10 +74,9 @@ async def sign_in(
         value=token,
         expires=expire.timestamp(),  # Convert datetime to timestamp
         secure=False,  # Optional: Set Secure flag if using HTTPS
-        httponly=True,  # Optional: Set the HttpOnly flag for security
+        httponly=False,  # Optional: Set the HttpOnly flag for security
         samesite=None, # Optional: Set SameSite policy
         path="/",  # Ensure the cookie is available throughout your site
-        domain="localhost"  # Adjust this if your site spans multiple subdomains
     )
     return response
 

@@ -3,6 +3,7 @@ from typing import(
     Union
 )
 
+from fastapi import Form
 from pydantic import (
     BaseModel, 
     Field, 
@@ -18,11 +19,13 @@ class CreateFeedBackSchema(BaseModel):
     """
 
 
-    fullname: str = Field(..., min_length=3, max_length=255)
+    fullname: str = Form(..., min_length=3, max_length=255)
     
-    email: EmailStr = Field(..., min_length=3, max_length=50)
+    email: EmailStr = Form(..., min_length=3, max_length=50)
     
-    description: str = Field(..., min_length=3, max_length=999)
+    description: str = Form(..., min_length=3, max_length=999)
+
+    phone: str = Form(..., min_length=3, max_length=255)
 
     @validator('fullname')
     def validate_fullname(cls, value: str):
@@ -58,12 +61,13 @@ class UpdateFeedBackSchema(BaseModel):
     """
     Update FeedBack Schema class for feedback update request
     """
-    fullname: str = Field(..., min_length=3, max_length=255)
+    fullname: str = Form(..., min_length=3, max_length=255)
     
-    email: EmailStr = Field(..., min_length=3, max_length=50)
+    email: EmailStr = Form(..., min_length=3, max_length=50)
     
-    description: str = Field(..., min_length=3, max_length=999)
+    description: str = Form(..., min_length=3, max_length=999)
 
+    phone: str = Form(..., min_length=3, max_length=255)
 
     @validator('fullname')
     def validate_fullname(cls, value: str):

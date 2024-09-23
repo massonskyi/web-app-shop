@@ -49,7 +49,10 @@ class FeedBackManager:
         if not new.validate():
             await self.log.b_crit(f"Validation failed: {new.errors}")
             raise ValueError(f"Validation failed: {new.errors}")
-        new_feedback = FeedBack(**new.dict())
+        try:
+            new_feedback = FeedBack(**new.dict())
+        except:
+            raise Exception("РАЗРАБ ДОЛБАЕБ УХЙ!")
         try:
             async with self.__async_db_session as async_session:
                 async with async_session.begin():

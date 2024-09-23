@@ -1,0 +1,14 @@
+Product ID: None
+Product Name: ANUA Peach 70% Niacin Serum
+Small Description: Тонизирующая сыворотка для лица с экстрактом персика и ниацинамидом
+Description: Тонизирующая сыворотка для лица с экстрактом персика и ниацинамидом обеспечивает глубокое увлажнение и ровный тон, а также здоровое сияние кожи.
+
+Объём: 30 мл.
+
+Подходит для: Всех типов кожи.
+Application: Нанести необходимое количество средства на очищенную и тонизированную кожу лица, распределить до полного впитывания, затем закрепить уход кремом.
+Structure: Aqua(Water), Glycerin, Niacinamide, Buty-lene Glycol, Diethoxyethyl Succinate, 1,2-Hexanediol, Lactobacillus Ferment, Prunus Persica (Peach) Fruit Extract, Pentylene Glycol, Sodium Hyaluronate
+Price: 2290.0
+Image: None
+Type: Уход за лицом
+Status: True
