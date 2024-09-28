@@ -62,7 +62,7 @@ class FeedBackManager:
             await self.log.b_crit(f"Failed to create feedback: {e}")
             raise SQLAlchemyError(f"Failed to create feedback: {e}")
         
-        return CreateFeedBackSchema(**new_feedback.dict())
+        return new_feedback.dict()
     async def get_feedback_by_id(
         self,
         feedback_id: int
@@ -78,7 +78,7 @@ class FeedBackManager:
                 result = await async_session.execute(select(FeedBack).filter_by(id=feedback_id))
                 feedback = result.scalar_one_or_none()
                 if feedback:
-                    return CreateFeedBackSchema(**feedback.dict())
+                    return feedback.dict()
                 return None
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
@@ -94,7 +94,7 @@ class FeedBackManager:
             async with self.__async_db_session as async_session:
                 result = await async_session.execute(select(FeedBack))
                 feedbacks = result.scalars().all()
-                return [CreateFeedBackSchema(**feedback.dict()) for feedback in feedbacks]
+                return [feedback.dict() for feedback in feedbacks]
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
             raise SQLAlchemyError(f"Error: {e}")
@@ -119,7 +119,7 @@ class FeedBackManager:
                     for key, value in update.dict(exclude_unset=True).items():
                         setattr(feedback, key, value)
                     await async_session.commit()
-                    return CreateFeedBackSchema(**feedback.dict())
+                    return feedback.dict()
                 return None
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")

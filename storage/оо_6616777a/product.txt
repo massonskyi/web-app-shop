@@ -1,0 +1,10 @@
+Product ID: None
+Product Name: оо
+Small Description: ооо
+Description: о
+Application: оо
+Structure: оо
+Price: 76.0
+Image: None
+Type: оо
+Status: False

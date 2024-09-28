@@ -6,17 +6,17 @@ class CreateProductSchema(BaseModel):
     """
     Create product schema model class for pydantic validation and serialization
     """
-    name: Optional[str] = Form(..., description=""),
-    smallDescription: Optional[str]  = Form(...,description=""),
-    description: Optional[str]  = Form(...,description=""),
-    application: Optional[str]  = Form(...,description=""),
-    structure: Optional[str]  = Form(...,description=""),
-    price: Optional[float]  = Form(...,description=""),
-    type: Optional[str]  = Form(...,description=""),
-    status: Optional[bool]  = Form(...,description=""),
-    is_on_sale: Optional[bool]  = Form(...,description=""),
-    sale_price: Optional[float]  = Form(...,description=""),
-    file: Optional[UploadFile]  = File(...,description="",media_type="image/*"),
+    name: Optional[str] = Form(..., description="")  
+    smallDescription: Optional[str] = Form(..., description="")
+    description: Optional[str] = Form(..., description="")
+    application: Optional[str] = Form(..., description="")
+    structure: Optional[str] = Form(..., description="")
+    price: Optional[float] = Form(..., description="")
+    type: Optional[str] = Form(..., description="")
+    status: Optional[bool] = Form(..., description="")
+    is_on_sale: Optional[bool] = Form(..., description="")
+    sale_price: Optional[float] = Form(..., description="")
+    file: Optional[UploadFile] = File(..., description="", media_type="image/*")
    
     def __repr__(self):
         return '<Product %r>' % self.name

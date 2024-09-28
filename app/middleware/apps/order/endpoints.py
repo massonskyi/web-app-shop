@@ -54,7 +54,7 @@ async def create_order(
             detail=str(e)
         )
     else:
-        response_content['order'] = new_order.dict()
+        response_content['order'] = new_order
         response_content['detail'] = "Successfully created order"
         status_code = status.HTTP_201_CREATED  # 201 Created
     finally:
@@ -95,7 +95,7 @@ async def get_order_by_id(
             detail=str(e)
         )
     else:
-        response_content['order'] = order.dict()
+        response_content['order'] = order
         response_content['details'] = "Successfully get order"
         status_code = status.HTTP_202_ACCEPTED  # 202 Accepted
     finally:
@@ -134,7 +134,7 @@ async def get_all_orders(
             detail=str(e)
         )
     else:
-        response_content['orders'] = [order.dict() for order in orders]
+        response_content['orders'] = [order for order in orders]
         response_content['details'] = "Successfully get all orders"
         status_code = status.HTTP_202_ACCEPTED  # 202 Accepted
     finally:
@@ -177,7 +177,7 @@ async def update_order_by_id(
             detail=str(e)
         )
     else:
-        response_content['order'] = updated_order.dict()
+        response_content['order'] = updated_order
         response_content['details'] = "Successfully updated order"
         status_code = status.HTTP_202_ACCEPTED  # 202 Accepted
     finally:
@@ -218,7 +218,7 @@ async def delete_order_by_id(
             detail=str(e)
         )
     else:
-        response_content['order'] = deleted_order.dict()
+        response_content['order'] = deleted_order
         response_content['details'] = "Successfully deleted order"
         status_code = status.HTTP_202_ACCEPTED  # 202 Accepted
     finally:

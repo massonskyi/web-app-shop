@@ -1,0 +1,10 @@
+Product ID: None
+Product Name: BRAYE Lipsleek 09 Coolness
+Small Description: Многофункциональный оттеночный бальзам-слайдер для губ
+Description: Многофункциональный оттеночный бальзам-слайдер для губ всегда будет с вами в течение дня и поможет создать натуральный и дерзкий образ.  Объём: 2.3 гр.
+Application: Нанесите необходимое количество средства на кожу губ с помощью кисти, пальца или силиконового спонжа. Можно использовать в качестве румян.
+Structure: Polybutene, Polyglyceryl-2 Isostearate/Dimer Dilinoleate Copolymer, Apple (Apple) Seed Oil, Diisostearyl Malate, Caprylic/Capric Triglyceride
+Price: 2090.0
+Image: None
+Type: Косметика
+Status: False

@@ -1,0 +1,10 @@
+Product ID: None
+Product Name: Round Lab Soybean Nourishing Toner
+Small Description: Питательный тонер для лица с экстрактом черной сои
+Description: Питательный тонер для лица с экстрактом черной сои направлен на глубокое восстановление и борьбу с сухостью и шелушениями.  Объём: 300 мл.  Подходит для: Всех типов кожи.
+Application: В качестве первого этапа ухода нанести необходимое количество средства на очищенную кожу лица с помощью хлопкового диска или ладоней, распределить до полного впитывания, затем перейти к остальным этапам ухода.
+Structure: Water, Propanediol, Butylene Glycol, 1,2-Hexanediol, Glycerin, Glycine Max (Soybean) Seed Extract (11,700 ppm), Ceramide NP
+Price: 2090.0
+Image: None
+Type: Тонеры
+Status: False

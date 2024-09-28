@@ -53,7 +53,7 @@ async def get_product_manager(
     summary='Create product',
 )
 async def create_product(
-    new: CreateProductResponse= Depends(),
+    new: CreateProductResponse = Depends(),
     product_manager: 'ProductManager' = Depends(get_product_manager),
     current_user: Admin = Depends(get_current_user)
 ) -> Response:
@@ -85,8 +85,7 @@ async def create_product(
             detail=str(e)
         )
     else:
-        response_content['product'] = new_product.dict(exclude={"file"})  # Исключаем объект файла
-        response_content['file_path'] = result_image_path
+        response_content['product'] = new_product
         response_content['detail'] = "Successfully created product "
         status_code = HTTPStatus.HTTP_201_CREATED  # 201 Created
     finally:
@@ -223,7 +222,6 @@ async def get_all_products(
 
 @API_PRODUCT_MODULE.put(
     '/{product_id}',
-    response_model=CreateProductResponse,
     summary='Update product by id',
 )
 async def update_product_by_id(
@@ -242,8 +240,20 @@ async def update_product_by_id(
     """
     response_content = {}
     status_code: HTTPStatus
+    if product.file:
+        file_name = f"file_{product.name}_{product.file.filename}"
+        file_path = f"D:\\study\\уник\\web\\web-app-shop\\frontend\\build\\static\\uploads\\{file_name}"
+
+        # save
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(product.file.file, buffer)
+
+        result_image_path = file_path
+    else:
+        result_image_path = DEFAULT_IMAGE_PATH
+
     try:
-        updated_product, file = await product_manager.update_product_by_id(product_id, product)
+        updated_product = await product_manager.update_product_by_id(product_id, product, result_image_path)
     except Exception as e:
         status_code = HTTPStatus.HTTP_500_INTERNAL_SERVER_ERROR
         raise HTTPException(
@@ -252,7 +262,6 @@ async def update_product_by_id(
         )
     else:
         response_content['product'] = updated_product
-        response_content['file'] = file
         response_content['details'] = "Successfully updated product"
         status_code = HTTPStatus.HTTP_202_ACCEPTED  # 202 Accepted   
     finally:

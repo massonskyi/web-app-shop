@@ -1,0 +1,10 @@
+Product ID: None
+Product Name: JMSolution Life Honey Gardenia Hand Cream Set Disney
+Small Description: Подарочный набор кремов для рук с ароматом мёда и гардении
+Description: Набор кремов для рук с ароматом мёда и гардении надёжно защищает кожу рук от сухости и придаёт коже приятный аромат  Объём: 50 мл * 3 шт
+Application: Выдавите необходимое количество крема из тубы. Массажными движениями равномерно нанесите на кожу рук, дайте впитаться.
+Structure: Water, Paraffinum Liquidum, Glycerin, Butyrospermum Parkii (Shea) Butter(17,000ppm), Polysorbate 60, Fragrance, Stearic Acid, Pentaerythrityl Stearate/Caprate/Caprylate/Adipate, Cetearyl Alcohol, Glyceryl Stearate SE, Isopropyl
+Price: 1190.0
+Image: None
+Type: Тело
+Status: True

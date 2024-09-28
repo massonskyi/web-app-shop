@@ -1,0 +1,10 @@
+Product ID: None
+Product Name: Biodance Bio-Collagen Real Deep Mask
+Small Description: Глубокоувлажняющая гидрогелевая маска с коллагеном и ферментами
+Description: Глубокоувлажняющая ночная гидрогелевая маска с коллагеном и ферментами придает коже гладкость, упругость и здоровое сияние.  Объём: 34 гр.  Подходит для: Всех типов кожи, склонной к обезвоженности и потере упругости.
+Application: Нанести свой основной уход до этапа сыворотки, затем извлечь маску из упаковки и распределить гидрогелевую основу по всему лицу, плотно зафиксировать. Оставить для воздействия на 3-4 часа или на всю ночь. 
+Structure: Water, Galactomyces Ferment Filtrate, Glycerin, Acrylates Copolymer, Niacinamide, Ceratonia Siliqua (Carob) Gum, Chondrus Crispus Extract, Betaine, Algin, Dipropylene Glycol,
+Price: 490.0
+Image: None
+Type: Уход за лицом
+Status: True

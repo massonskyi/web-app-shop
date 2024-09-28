@@ -55,7 +55,7 @@ async def create_feedback(
             detail=str(e)
         )
     else:
-        response_content['feedback'] = new_feedback.dict()
+        response_content['feedback'] = new_feedback
         response_content['detail'] = "Successfully created feedback"
         status_code = status.HTTP_201_CREATED  # 201 Created
     finally:
@@ -96,7 +96,7 @@ async def get_feedback_by_id(
             detail=str(e)
         )
     else:
-        response_content['feedback'] = feedback.dict()
+        response_content['feedback'] = feedback
         response_content['details'] = "Successfully get feedback"
         status_code = status.HTTP_202_ACCEPTED  # 202 Accepted
     finally:
@@ -135,7 +135,7 @@ async def get_all_feedbacks(
             detail=str(e)
         )
     else:
-        response_content['feedbacks'] = [feedback.dict() for feedback in feedbacks]
+        response_content['feedbacks'] = [feedback for feedback in feedbacks]
         response_content['details'] = "Successfully get all feedbacks"
         status_code = status.HTTP_202_ACCEPTED  # 202 Accepted
     finally:
@@ -178,7 +178,7 @@ async def update_feedback_by_id(
             detail=str(e)
         )
     else:
-        response_content['feedback'] = updated_feedback.dict()
+        response_content['feedback'] = updated_feedback
         response_content['details'] = "Successfully updated feedback"
         status_code = status.HTTP_202_ACCEPTED  # 202 Accepted
     finally:
@@ -219,7 +219,7 @@ async def delete_feedback_by_id(
             detail=str(e)
         )
     else:
-        response_content['feedback'] = deleted_feedback.dict()
+        response_content['feedback'] = deleted_feedback
         response_content['details'] = "Successfully deleted feedback"
         status_code = status.HTTP_202_ACCEPTED  # 202 Accepted
     finally:

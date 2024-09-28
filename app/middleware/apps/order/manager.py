@@ -43,7 +43,7 @@ class OrderManager:
             await self.log.b_crit(f"Failed to create order: {e}")
             raise SQLAlchemyError(f"Failed to create order: {e}")
 
-        return CreateOrderSchema(**new_order.dict())
+        return new_order.dict()
 
     async def get_order_by_id(self, order_id: int) -> Optional[CreateOrderSchema]:
         """
@@ -56,7 +56,7 @@ class OrderManager:
             result = await self.__async_db_session.execute(select(Order).filter_by(id=order_id))
             order = result.scalar_one_or_none()
             if order:
-                return CreateOrderSchema(**order.dict())
+                return order.dict()
             return None
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
@@ -71,7 +71,7 @@ class OrderManager:
         try:
             result = await self.__async_db_session.execute(select(Order))
             orders = result.scalars().all()
-            return [CreateOrderSchema(**order.dict()) for order in orders]
+            return [order.dict() for order in orders]
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
             raise SQLAlchemyError(f"Error: {e}")
@@ -92,7 +92,7 @@ class OrderManager:
                     setattr(order, key, value)
                 await self.__async_db_session.commit()
                 await self.__async_db_session.refresh(order)
-                return CreateOrderSchema(**order.dict())
+                return order.dict()
             return None
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")

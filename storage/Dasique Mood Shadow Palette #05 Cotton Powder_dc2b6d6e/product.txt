@@ -1,0 +1,10 @@
+Product ID: None
+Product Name: Dasique Mood Shadow Palette #05 Cotton Powder
+Small Description: Большая палетка теней для век
+Description: Большая палетка теней для век в пастельных оттенках поможет создать образ на все случаи жизни: от яркого вечернего до лёгкого дневного макияжа.  Объём: 10,5 гр.
+Application: С помощью аппликатора, кисти или пальцев нанести необходимый оттенок или комбинацию оттенков на веки, растушевать.
+Structure: Hexahydroxystearate/Hexastearate/Hexarosinate, Dimethicone, Triethoxycaprylylsilane, Diisostearyl Malate, Ultramarines (Ci 77007), Propanediol, Dimethiconol Stearate, Magnesium Stearate,
+Price: 3890.0
+Image: None
+Type: Косметика
+Status: True

@@ -5,6 +5,7 @@ from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
+from middleware.apps.product.schemas import CreateProductSchema
 from middleware.apps.product.models import Product
 from functions.async_logger import AsyncLogger
 from .schemas import CreateProductSchema, UpdateProductSchema
@@ -73,7 +74,7 @@ class ProductManager:
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
             raise SQLAlchemyError(f"Error: {e}")
-        return CreateProductSchema(**new_product.dict())
+        return new_product.dict()
 
     async def get_product_by_id(self, product_id: int) -> Optional[CreateProductSchema]:
         """
@@ -87,7 +88,7 @@ class ProductManager:
                 result = await async_session.execute(select(Product).filter_by(id=product_id))
                 product = result.scalar_one_or_none()
                 if product:
-                    return CreateProductSchema(**product.dict()).dict(exclude={"file"}), load_image(product.image)
+                    return product.dict(), load_image(product.image)
                 return None
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
@@ -105,7 +106,7 @@ class ProductManager:
                 products = result.scalars().all()
                 if not products:
                     raise
-            return  [{'id':product.id, 'product':CreateProductSchema(**product.dict()).dict(exclude={"file"}), 'file':load_image(product.image)} for product in products]
+            return  [{'id':product.id, 'product':product.dict(), 'file':load_image(product.image)} for product in products]
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
             raise SQLAlchemyError(f"Error: {e}")
@@ -121,7 +122,7 @@ class ProductManager:
             async with self.__async_db_session as async_session:
                 result = await async_session.execute(select(Product).filter_by(type=product_type))
                 products = result.scalars().all()
-                return  [{'id':product.id, 'product':CreateProductSchema(**product.dict()).dict(exclude={"file"}), 'file':load_image(product.image)} for product in products]
+                return  [{'id':product.id, 'product':product.dict(), 'file':load_image(product.image)} for product in products]
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
             raise SQLAlchemyError(f"Error: {e}")
@@ -136,7 +137,7 @@ class ProductManager:
             async with self.__async_db_session as async_session:
                 result = await async_session.execute(select(Product).filter_by(is_on_sale=True))
                 products = result.scalars().all()
-                return  [{'id':product.id, 'product':CreateProductSchema(**product.dict()).dict(exclude={"file"}), 'file':load_image(product.image)} for product in products]
+                return  [{'id':product.id, 'product':product.dict(), 'file':load_image(product.image)} for product in products]
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
             raise SQLAlchemyError(f"Error: {e}")
@@ -157,13 +158,13 @@ class ProductManager:
                     product_dict = product.dict()
                     if product.is_on_sale:
                         product_dict['price'] = product.sale_price
-                    product_list.append(CreateProductSchema(**product_dict))
+                    product_list.append(product_dict)
                 return product_list
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
             raise SQLAlchemyError(f"Error: {e}")
 
-    async def update_product_by_id(self, product_id: int, update: UpdateProductSchema) -> Optional[CreateProductSchema]:
+    async def update_product_by_id(self, product_id: int, update: CreateProductSchema, result_image_path: str) -> Optional[dict]:
         """
         Update a product.
         @params: product_id: The ID of the product to update.
@@ -175,12 +176,14 @@ class ProductManager:
             async with self.__async_db_session as async_session:
                 result = await async_session.execute(select(Product).filter_by(id=product_id))
                 product = result.scalar_one_or_none()
+
                 if product:
-                    for key, value in update.dict(exclude_unset=True).items():
+                    for key, value in update.dict(exclude='file').items():
                         setattr(product, key, value)
+                    setattr(product, 'image', result_image_path )
                     await async_session.commit()
 
-                    return CreateProductSchema(**product.dict()).dict(exclude={"file"}), load_image(product.image)
+                    return {'product':product.dict(), 'file':load_image(product.image)}
                 return None
         except SQLAlchemyError as e:
             await self.log.b_crit(f"Error: {e}")
